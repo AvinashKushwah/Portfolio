@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avinash Singh Kushwah — Systems Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #14171a;
+    --panel: #1b1f24;
+    --panel-2: #20252b;
+    --line: #2a2f36;
+    --text: #eceef0;
+    --text-dim: #8a94a0;
+    --text-dimmer: #5c6570;
+    --amber: #f2a93b;
+    --amber-dim: rgba(242,169,59,0.14);
+    --cyan: #5bbcc8;
+    --cyan-dim: rgba(91,188,200,0.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--amber-dim); color:var(--amber);}
+  a{color:inherit;text-decoration:none;}
+
+  .mono{font-family:'IBM Plex Mono', monospace;}
+
+  /* ---------- background grid ---------- */
+  .bg-grid{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 64px 64px;
+    opacity:0.35;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
+  }
+
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px 40px;
+    background:rgba(20,23,26,0.75);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-id{font-size:13px; letter-spacing:0.06em; color:var(--text-dim);}
+  .nav-id b{color:var(--text); font-weight:600;}
+  .nav-links{display:flex; gap:28px; font-size:13px;}
+  .nav-links a{color:var(--text-dim); position:relative; padding-bottom:2px; transition:color .2s;}
+  .nav-links a:hover{color:var(--amber);}
+  .nav-links a::before{content:attr(data-idx); color:var(--text-dimmer); margin-right:6px; font-family:'IBM Plex Mono',monospace; font-size:11px;}
+  .status-dot{width:7px;height:7px;border-radius:50%;background:var(--amber);display:inline-block;margin-right:8px;box-shadow:0 0 8px var(--amber);animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+
+  section{position:relative; z-index:1; padding:0 40px;}
+
+  /* ---------- hero ---------- */
+  .hero{
+    min-height:100vh;
+    display:flex; flex-direction:column; justify-content:center;
+    padding-top:120px; padding-bottom:60px;
+    max-width:1100px; margin:0 auto;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px; letter-spacing:0.15em; text-transform:uppercase;
+    color:var(--amber);
+    display:flex; align-items:center; margin-bottom:22px;
+  }
+  h1.name{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:clamp(42px, 8vw, 92px);
+    line-height:1.02;
+    letter-spacing:-0.02em;
+    color:var(--text);
+    margin-bottom:20px;
+  }
+  .role-line{
+    font-size:clamp(16px,2.2vw,20px);
+    color:var(--text-dim);
+    max-width:620px;
+    line-height:1.55;
+    margin-bottom:44px;
+  }
+  .role-line b{color:var(--text); font-weight:500;}
+
+  .cta-row{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:64px;}
+  .btn{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    padding:12px 20px;
+    border-radius:2px;
+    border:1px solid var(--line);
+    color:var(--text);
+    transition:all .2s;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn.primary{background:var(--amber); color:#14171a; border-color:var(--amber); font-weight:600;}
+  .btn.primary:hover{background:#ffbf5c;}
+  .btn:not(.primary):hover{border-color:var(--cyan); color:var(--cyan);}
+
+  /* ---------- memory map ---------- */
+  .memmap-label{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-dimmer);
+    letter-spacing:0.1em; text-transform:uppercase; margin-bottom:10px;
+    display:flex; justify-content:space-between;
+  }
+  .memmap{
+    display:flex; width:100%; height:64px; border-radius:2px; overflow:hidden;
+    border:1px solid var(--line);
+  }
+  .mm-seg{
+    position:relative;
+    flex:1;
+    border-right:1px solid var(--line);
+    display:flex; flex-direction:column; justify-content:center; align-items:center;
+    background:var(--panel);
+    transition:background .25s, flex .3s;
+    cursor:pointer;
+  }
+  .mm-seg:last-child{border-right:none;}
+  .mm-seg .mm-tag{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-dimmer);}
+  .mm-seg .mm-yr{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-dim); margin-top:3px;}
+  .mm-seg:hover{flex:1.4; background:var(--panel-2);}
+  .mm-seg:hover .mm-tag{color:var(--amber);}
+  .mm-seg.current{background:var(--amber-dim);}
+  .mm-seg.current .mm-tag{color:var(--amber);}
+  .mm-seg.current:hover{background:var(--amber-dim);}
+  .mm-tooltip{
+    position:absolute; bottom:calc(100% + 10px); left:50%; transform:translateX(-50%);
+    background:var(--panel-2); border:1px solid var(--line); padding:10px 14px; border-radius:3px;
+    font-size:12px; white-space:nowrap; color:var(--text); opacity:0; pointer-events:none;
+    transition:opacity .2s; z-index:10;
+  }
+  .mm-seg:hover .mm-tooltip{opacity:1;}
+
+  /* ---------- section heading ---------- */
+  .sec-head{
+    display:flex; align-items:baseline; gap:16px; margin-bottom:48px;
+    max-width:1100px; margin-left:auto; margin-right:auto;
+    padding-top:110px;
+  }
+  .sec-idx{font-family:'IBM Plex Mono',monospace; color:var(--text-dimmer); font-size:14px;}
+  .sec-title{font-family:'Space Grotesk',sans-serif; font-size:32px; font-weight:600;}
+  .sec-rule{flex:1; height:1px; background:var(--line);}
+
+  .container{max-width:1100px; margin:0 auto;}
+
+  /* ---------- experience registers ---------- */
+  .reg{
+    display:grid;
+    grid-template-columns: 130px 1px 1fr;
+    gap:0 28px;
+    padding:34px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .reg:first-child{padding-top:0;}
+  .reg-addr{
+    font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--amber);
+    padding-top:2px;
+  }
+  .reg-addr span{display:block; color:var(--text-dimmer); font-size:11px; margin-top:6px;}
+  .reg-rule{background:var(--line);}
+  .reg-body h3{font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:600; margin-bottom:4px;}
+  .reg-body .co{color:var(--cyan); font-family:'IBM Plex Mono',monospace; font-size:13px; margin-bottom:16px; display:block;}
+  .reg-body ul{list-style:none;}
+  .reg-body li{
+    position:relative; padding-left:20px; margin-bottom:11px;
+    color:var(--text-dim); font-size:14.5px; line-height:1.6;
+  }
+  .reg-body li::before{content:"›"; position:absolute; left:0; color:var(--text-dimmer);}
+
+  /* ---------- projects ---------- */
+  .proj-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px;}
+  .proj-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:3px;
+    padding:32px; transition:border-color .25s, transform .25s;
+  }
+  .proj-card:hover{border-color:var(--cyan); transform:translateY(-3px);}
+  .proj-tag{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-dimmer); letter-spacing:.08em; text-transform:uppercase; margin-bottom:14px; display:block;}
+  .proj-card h3{font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:600; margin-bottom:14px;}
+  .proj-card p{color:var(--text-dim); font-size:14.5px; line-height:1.65; margin-bottom:10px;}
+  .proj-stat{
+    display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:12px;
+    color:var(--amber); background:var(--amber-dim); padding:4px 10px; border-radius:2px; margin-top:8px;
+  }
+
+  /* ---------- education ---------- */
+  .edu{display:grid; grid-template-columns:1fr 1fr; gap:24px;}
+  .edu-card{border:1px solid var(--line); padding:28px; border-radius:3px; background:var(--panel);}
+  .edu-yr{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-dimmer);}
+  .edu-card h3{font-family:'Space Grotesk',sans-serif; font-size:19px; margin:10px 0 4px; font-weight:600;}
+  .edu-degree{color:var(--cyan); font-size:14px; margin-bottom:14px; display:block;}
+  .edu-gpa{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--amber); margin-bottom:14px; display:block;}
+  .edu-course{color:var(--text-dim); font-size:13px; line-height:1.6;}
+
+  /* ---------- skills ---------- */
+  .skill-block{margin-bottom:30px;}
+  .skill-label{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-dimmer); margin-bottom:14px; display:block;}
+  .chip-row{display:flex; flex-wrap:wrap; gap:10px;}
+  .chip{
+    font-family:'IBM Plex Mono',monospace; font-size:13px; padding:8px 14px;
+    border:1px solid var(--line); border-radius:2px; color:var(--text-dim);
+    transition:all .2s;
+  }
+  .chip:hover{border-color:var(--amber); color:var(--amber);}
+
+  /* ---------- achievements strip ---------- */
+  .strip{
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px;
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    padding:36px 0;
+  }
+  .strip-item{flex:1; min-width:240px;}
+  .strip-num{font-family:'Space Grotesk',sans-serif; font-size:34px; font-weight:700; color:var(--amber);}
+  .strip-cap{color:var(--text-dim); font-size:13.5px; margin-top:6px; line-height:1.5;}
+
+  /* ---------- contact / footer ---------- */
+  footer{
+    padding:110px 40px 50px;
+    text-align:center;
+  }
+  footer .sec-title{font-size:clamp(32px,6vw,56px);}
+  footer p{color:var(--text-dim); max-width:480px; margin:18px auto 40px; line-height:1.6;}
+  .contact-row{display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-bottom:70px;}
+  .foot-bottom{
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;
+    font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-dimmer);
+    border-top:1px solid var(--line); padding-top:24px; max-width:1100px; margin:0 auto;
+  }
+
+  /* ---------- reveal animation ---------- */
+  .reveal{opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  @media (max-width:760px){
+    .nav-links{display:none;}
+    .reg{grid-template-columns:1fr; gap:8px;}
+    .reg-rule{display:none;}
+    .proj-grid, .edu{grid-template-columns:1fr;}
+    section, .sec-head{padding-left:22px; padding-right:22px;}
+    nav{padding:16px 22px;}
+    footer{padding:80px 22px 40px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .reveal{opacity:1; transform:none; transition:none;}
+    .status-dot{animation:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+
+<nav>
+  <div class="nav-id mono"><span class="status-dot"></span><b>AVINASH</b>&nbsp;KUSHWAH</div>
+  <div class="nav-links mono">
+    <a href="#experience" data-idx="01">EXPERIENCE</a>
+    <a href="#projects" data-idx="02">PROJECTS</a>
+    <a href="#education" data-idx="03">EDUCATION</a>
+    <a href="#skills" data-idx="04">SKILLS</a>
+    <a href="#contact" data-idx="05">CONTACT</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="eyebrow"><span class="status-dot"></span>SOFTWARE ENGINEER</div>
+  <h1 class="name">Avinash Singh<br>Kushwah</h1>
+  <p class="role-line">I build the <b>runtime layer</b> between silicon and software — user-space libraries, device orchestration, and low-level APIs that keep AI accelerators fed, addressed, and fast. Currently at <b>Qualcomm</b>, Bengaluru.</p>
+  
+  
+  <div class="cta-row">
+     <a class="btn"
+       href="https://www.linkedin.com/in/avinashk15/"
+       target="_blank"
+       rel="noopener noreferrer">
+        in LINKEDIN
+    </a>
+    <a class="btn" href="#experience">↓ VIEW EXPERIENCE</a>
+  </div>
+
+  <div class="reveal">
+    <div class="memmap-label">
+      <span>CAREER ADDRESS SPACE</span>
+      <span>2020 → PRESENT</span>
+    </div>
+    <div class="memmap">
+      <div class="mm-seg">
+        <div class="mm-tooltip">B.E. Computer Science, MITS Gwalior</div>
+        <span class="mm-tag">EDU</span><span class="mm-yr">2016–20</span>
+      </div>
+      <div class="mm-seg">
+        <div class="mm-tooltip">Test Engineer — SAP ABAP, Infosys</div>
+        <span class="mm-tag">INFY</span><span class="mm-yr">2021–22</span>
+      </div>
+      <div class="mm-seg">
+        <div class="mm-tooltip">M.Tech CSE, IIT Madras — CGPA 8.25</div>
+        <span class="mm-tag">M.TECH</span><span class="mm-yr">2022–24</span>
+      </div>
+      <div class="mm-seg">
+        <div class="mm-tooltip">Software Engineer — L3 protocols, Ruckus/CommScope</div>
+        <span class="mm-tag">RUCKUS</span><span class="mm-yr">2024–25</span>
+      </div>
+      <div class="mm-seg current">
+        <div class="mm-tooltip">Engineer — AI Accelerator Runtime, Qualcomm</div>
+        <span class="mm-tag">QCOM</span><span class="mm-yr">NOW</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="sec-head reveal">
+    <span class="sec-idx">§01</span>
+    <span class="sec-title">Experience</span>
+    <span class="sec-rule"></span>
+  </div>
+  <div class="container">
+
+    <div class="reg reveal">
+      <div class="reg-addr">JUL 2025<span>NOW</span></div>
+      <div class="reg-rule"></div>
+      <div class="reg-body">
+        <h3>Engineer</h3>
+        <span class="co">Qualcomm · Cloud Software Unit, AI Accelerator Runtime Team · Bengaluru</span>
+        <ul>
+          <li>Develop and maintain a user-space runtime library and APIs that configure, manage, execute, and oversee the full lifecycle of AI workloads on Qualcomm AI accelerators.</li>
+          <li>Designed and implemented an auto device picker for multi-accelerator LLM inference, enabling optimal device selection and concurrent execution across processes with efficient shared-resource utilization.</li>
+          <li>Built VM-aware device mapping and parsing logic for correct BAR address resolution and peer-to-peer communication inside virtualized environments — achieving near-native (~100%) performance.</li>
+          <li>Enhanced C++ runtime APIs and execution pipelines to improve workload orchestration, resource utilization, and application integration.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="reg reveal">
+      <div class="reg-addr">JUN 2024<span>JUL 2025</span></div>
+      <div class="reg-rule"></div>
+      <div class="reg-body">
+        <h3>Software Engineer</h3>
+        <span class="co">Ruckus Networks, CommScope · Networking, Intelligent Cellular & Security Team · Bengaluru</span>
+        <ul>
+          <li>Designed endianness-neutral APIs and refactored Layer 3 protocol handling to ensure portability across architectures, coordinating with cross-functional teams for clean codebase integration.</li>
+          <li>Developed, optimized, and debugged networking protocols, shipping Layer 3 changes on ICX switches to improve performance and efficiency.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="reg reveal">
+      <div class="reg-addr">MAY 2021<span>MAY 2022</span></div>
+      <div class="reg-rule"></div>
+      <div class="reg-body">
+        <h3>Test Engineer</h3>
+        <span class="co">Infosys Limited · Indore</span>
+        <ul>
+          <li>Analyzed business requirements and designed solutions in SAP ABAP, including custom programs, reports, interfaces, enhancements, and forms.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="projects">
+  <div class="sec-head reveal">
+    <span class="sec-idx">§02</span>
+    <span class="sec-title">Projects</span>
+    <span class="sec-rule"></span>
+  </div>
+  <div class="container proj-grid">
+
+    <div class="proj-card reveal">
+      <span class="proj-tag">Interpretability · IIT Madras · Jun 2023 – Apr 2024</span>
+      <h3>Interpretability in CNNs and U-Nets</h3>
+      <p>Explored feature-visualization techniques for convolutional neural networks to reveal how the network arrives at its decisions.</p>
+      <p>Focus on making black-box vision models more transparent and debuggable for downstream trust.</p>
+    </div>
+
+    <div class="proj-card reveal">
+      <span class="proj-tag">GPU Systems · IIT Madras · Feb 2023 – Mar 2023</span>
+      <h3>Facility Booking System for Multi-Center Resource Allocation</h3>
+      <p>Designed a high-throughput booking system handling 100K+ requests/day, using GPU parallelism for concurrent request processing.</p>
+      <span class="proj-stat">+88% throughput via parallel workload distribution across GPU cores</span>
+    </div>
+
+  </div>
+</section>
+
+<section id="education">
+  <div class="sec-head reveal">
+    <span class="sec-idx">§03</span>
+    <span class="sec-title">Education</span>
+    <span class="sec-rule"></span>
+  </div>
+  <div class="container edu">
+
+    <div class="edu-card reveal">
+      <span class="edu-yr mono">2022 — 2024</span>
+      <h3>Indian Institute of Technology, Madras</h3>
+      <span class="edu-degree">M.Tech, Computer Science and Engineering</span>
+      <span class="edu-gpa">CGPA 8.25</span>
+      <span class="edu-course">GPU Programming · Pattern Recognition & ML · Deep Learning · Linear Algebra · Advanced Data Structures & Algorithms · Advanced Programming Lab · Digital System Testing & Testable Design</span>
+    </div>
+
+    <div class="edu-card reveal">
+      <span class="edu-yr mono">2016 — 2020</span>
+      <h3>Madhav Institute of Technology and Science, Gwalior</h3>
+      <span class="edu-degree">B.E., Computer Science and Engineering</span>
+      <span class="edu-gpa">CGPA 7.56</span>
+      <span class="edu-course">Computer Networks · Operating Systems · Computer Architecture · Database Management Systems · Object-Oriented Programming · Compiler Design</span>
+    </div>
+
+  </div>
+</section>
+
+<section id="skills">
+  <div class="sec-head reveal">
+    <span class="sec-idx">§04</span>
+    <span class="sec-title">Skills</span>
+    <span class="sec-rule"></span>
+  </div>
+  <div class="container">
+
+    <div class="skill-block reveal">
+      <span class="skill-label">Languages</span>
+      <div class="chip-row">
+        <span class="chip">C</span><span class="chip">C++</span><span class="chip">CUDA</span><span class="chip">Python</span><span class="chip">MySQL</span>
+      </div>
+    </div>
+
+    <div class="skill-block reveal">
+      <span class="skill-label">Core Concepts</span>
+      <div class="chip-row">
+        <span class="chip">AI Accelerator Runtime Development</span><span class="chip">Data Structures & Algorithms</span>
+        <span class="chip">Object-Oriented Design</span><span class="chip">Multithreading & Concurrency</span>
+        <span class="chip">Operating Systems</span><span class="chip">Layer 3 Forwarding Protocols</span>
+        <span class="chip">Performance Optimization</span>
+      </div>
+    </div>
+
+    <div class="skill-block reveal">
+      <span class="skill-label">Tools & Platforms</span>
+      <div class="chip-row">
+        <span class="chip">Valgrind</span><span class="chip">GDB</span><span class="chip">Git</span><span class="chip">GitHub</span>
+        <span class="chip">Jira</span><span class="chip">Linux</span><span class="chip">Windows</span>
+        <span class="chip">Wireshark</span><span class="chip">Docker</span><span class="chip">Vim</span>
+      </div>
+    </div>
+
+    <div class="skill-block reveal">
+      <span class="skill-label">Collaboration</span>
+      <div class="chip-row">
+        <span class="chip">Problem-Solving</span><span class="chip">Debugging</span><span class="chip">Leadership</span>
+        <span class="chip">Cross-team Collaboration</span><span class="chip">Code Reviews</span><span class="chip">Unit Testing</span>
+      </div>
+    </div>
+
+    <div class="strip reveal">
+      <div class="strip-item">
+        <div class="strip-num">AIR 64</div>
+        <div class="strip-cap">GATE CSE 2022 — All India Rank 64 of ~79,000 candidates (99.92 percentile)</div>
+      </div>
+      <div class="strip-item">
+        <div class="strip-num">TA × 3</div>
+        <div class="strip-cap">Teaching Assistant — Intro to Programming, Smart Sensing for IoT, Linear Algebra & Random Processes</div>
+      </div>
+      <div class="strip-item">
+        <div class="strip-num">~100%</div>
+        <div class="strip-cap">Near-native performance achieved on VM-aware peer-to-peer device communication at Qualcomm</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="reveal">
+    <span class="sec-idx mono">§05</span>
+    <div class="sec-title" style="font-family:'Space Grotesk',sans-serif; font-weight:700; margin-top:10px;">Let's talk systems.</div>
+    <p>Open to conversations on high-performace software, AI accelerator runtime development, modern c++ applications, and performance-critical applications.</p>
+    <div class="contact-row">
+      <a class="btn primary" href="mailto:Avinashkushwah31@gmail.com">✉ Avinashkushwah31@gmail.com</a>
+      <a class="btn" href="tel:+918770727183">☎ +91-8770727183</a>
+    </div>
+    <div class="foot-bottom">
+      <span>BENGALURU, INDIA</span>
+      <span>AVINASH SINGH KUSHWAH © 2026</span>
+      <span>BUILT WITH INTENTION</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold:0.12});
+  revealEls.forEach(el=>io.observe(el));
+</script>
+
+</body>
+</html>
