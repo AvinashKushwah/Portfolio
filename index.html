@@ -283,7 +283,7 @@
   <h1 class="name">Avinash Singh<br>Kushwah</h1>
   <p class="role-line">I love <b>system software engineering</b> and chasing every last cycle of <b>performance</b> out of the stack. Currently building at <b>NVIDIA</b>.</p>
   
-  
+
   <div class="cta-row">
      <a class="btn"
        href="https://www.linkedin.com/in/avinashk15/"
@@ -532,6 +532,7 @@
       <span>BENGALURU, INDIA</span>
       <span>AVINASH SINGH KUSHWAH © 2026</span>
       <span>BUILT WITH INTENTION</span>
+      <span id="visit-count" class="mono">VIEWS: <span id="visit-count-num">—</span></span>
     </div>
   </div>
 </footer>
@@ -544,6 +545,18 @@
     });
   }, {threshold:0.12});
   revealEls.forEach(el=>io.observe(el));
+
+  // ---------- view counter (CountAPI) ----------
+  // Uses a free, no-signup hit counter. Namespace + key together form a
+  // unique bucket, so change them if you ever want to reset the count.
+  fetch('https://api.countapi.xyz/hit/avinashkushwah-portfolio/views')
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('visit-count-num').textContent = data.value.toLocaleString();
+    })
+    .catch(() => {
+      document.getElementById('visit-count').style.display = 'none';
+    });
 </script>
 
 </body>
